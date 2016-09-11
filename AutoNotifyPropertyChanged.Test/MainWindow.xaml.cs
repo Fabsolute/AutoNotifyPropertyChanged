@@ -20,8 +20,14 @@ namespace AutoNotifyPropertyChanged.Test
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MyModifiedTestClass ModifiedTestObject { get; set; }
+        public MyOriginalTestClass OriginalTestObject { get; set; }
+
         public MainWindow()
         {
+            ModifiedTestObject = NotifyHelper.CreateInstance<MyModifiedTestClass>();
+            OriginalTestObject = new MyOriginalTestClass();
+
             InitializeComponent();
         }
     }
