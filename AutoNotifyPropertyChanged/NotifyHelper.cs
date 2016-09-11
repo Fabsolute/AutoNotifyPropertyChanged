@@ -10,11 +10,11 @@ namespace AutoNotifyPropertyChanged
     public static class NotifyHelper
     {
         private static Dictionary<Type, Type> ModifiedCache = new Dictionary<Type, Type>();
-        private static readonly Lazy<AssemblyBuilder> assemblyBuilderHolder = new Lazy<AssemblyBuilder>(() => AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("ModifiedAssembly"), AssemblyBuilderAccess.Run));
-        private static readonly Lazy<ModuleBuilder> moduleBuilderHolder = new Lazy<ModuleBuilder>(() => AssemblyBuilder.DefineDynamicModule("ModifiedModule"));
+        private static readonly Lazy<AssemblyBuilder> AssemblyBuilderHolder = new Lazy<AssemblyBuilder>(() => AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("ModifiedAssembly"), AssemblyBuilderAccess.Run));
+        private static readonly Lazy<ModuleBuilder> ModuleBuilderHolder = new Lazy<ModuleBuilder>(() => AssemblyBuilder.DefineDynamicModule("ModifiedModule"));
 
-        private static AssemblyBuilder AssemblyBuilder { get { return assemblyBuilderHolder.Value; } }
-        private static ModuleBuilder ModuleBuilder { get { return moduleBuilderHolder.Value; } }
+        private static AssemblyBuilder AssemblyBuilder { get { return AssemblyBuilderHolder.Value; } }
+        private static ModuleBuilder ModuleBuilder { get { return ModuleBuilderHolder.Value; } }
 
         public static T CreateInstance<T>() where T : ModelBase
         {
@@ -25,13 +25,13 @@ namespace AutoNotifyPropertyChanged
 
         public static Type Load(Type type)
         {
-            Type modified;
+            Type modifiedType;
             // Try load
-            if (!ModifiedCache.TryGetValue(type, out modified))
+            if (!ModifiedCache.TryGetValue(type, out modifiedType))
             {
-                modified = Create(type);
+                modifiedType = Create(type);
             }
-            return modified;
+            return modifiedType;
         }
 
         private static Type Create(Type type)
@@ -42,14 +42,14 @@ namespace AutoNotifyPropertyChanged
             MethodInfo onPropertyChangedMethodInfo = typeof(ModelBase).GetMethod("OnPropertyChanged", BindingFlags.Instance | BindingFlags.NonPublic, Type.DefaultBinder, new Type[1] { typeof(string) }, null);
             // Get all properties
             type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).
-                // Filter virtual and public or protected
+            // Filter virtual and public or protected
             Where(p => p.GetSetMethod().IsVirtual && (p.GetSetMethod().IsPublic || p.GetSetMethod().IsFamily)).ToList().
-                // Override all set methods
+            // Override all set methods
             ForEach((property) =>
             {
                 // Set method
                 MethodInfo setMethodInfo = property.GetSetMethod();
-                // Create new method
+                // Create new set method
                 MethodBuilder setMethodBuilder = typeBuilder.DefineMethod(setMethodInfo.Name, setMethodInfo.Attributes, setMethodInfo.ReturnType, setMethodInfo.GetParameters().Select(t => t.ParameterType).ToArray());
                 // Override set method
                 typeBuilder.DefineMethodOverride(setMethodBuilder, setMethodInfo);
@@ -74,16 +74,15 @@ namespace AutoNotifyPropertyChanged
                  * public override void set_PropertyName(ParameterType value)
                  * {
                  *      base.set_PropertyName(value);
-                 *      OnPropertyChanged(PropertyName);
+                 *      OnPropertyChanged("PropertyName");
                  * }
                  * */
             });
             // Create modified type
-            Type modified = typeBuilder.CreateType();
+            Type modifiedType = typeBuilder.CreateType();
             // Cache
-            ModifiedCache.Add(type, modified);
-
-            return modified;
+            ModifiedCache.Add(type, modifiedType);
+            return modifiedType;
         }
 
 
