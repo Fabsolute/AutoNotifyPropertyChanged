@@ -1,8 +1,29 @@
 ﻿<Window x:Class="AutoNotifyPropertyChanged.Test.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="410.895" Width="357.836">
     <Grid>
-        
+        <GroupBox Header="Modified" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Stretch" Width="163">
+            <StackPanel Orientation="Vertical">
+                <TextBox Height="23" Margin="10" Text="{Binding ModifiedTestObject.Name, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <Label Margin="10" Height="25" Content="{Binding ModifiedTestObject.Name, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <TextBox Height="23" Margin="10" Text="{Binding ModifiedTestObject.Surname, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <Label Margin="10" Height="25" Content="{Binding ModifiedTestObject.Surname, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <TextBox Height="23" Margin="10" Text="{Binding ModifiedTestObject.Age, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <Label Margin="10" Height="25" Content="{Binding ModifiedTestObject.Age, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Original" HorizontalAlignment="Left" Margin="178,10,0,0" VerticalAlignment="Stretch" Width="163">
+            <StackPanel Orientation="Vertical">
+                <TextBox Height="23" Margin="10" Text="{Binding OriginalTestObject.Name, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <Label Margin="10" Height="25" Content="{Binding OriginalTestObject.Name, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <TextBox Height="23" Margin="10" Text="{Binding OriginalTestObject.Surname, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <Label Margin="10" Height="25" Content="{Binding OriginalTestObject.Surname, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <TextBox Height="23" Margin="10" Text="{Binding OriginalTestObject.Age, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+                <Label Margin="10" Height="25" Content="{Binding OriginalTestObject.Age, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"/>
+            </StackPanel>
+        </GroupBox>
+
     </Grid>
 </Window>
